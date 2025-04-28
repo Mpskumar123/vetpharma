@@ -1,0 +1,35 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- Product Image Section -->
+    <div class="col-md-6 mb-4">
+      {% if product.image %}
+        <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.name }}">
+      {% else %}
+        <img src="https://via.placeholder.com/400x300" class="img-fluid rounded shadow" alt="No image available">
+      {% endif %}
+    </div>
+    <!-- Product Details Section -->
+    <div class="col-md-6">
+      <h3 class="text-primary">{{ product.name }}</h3>
+      <p>{{ product.description }}</p>
+      <h4 class="text-success">₹{{ product.price }}</h4>
+
+      <!-- Quantity Input -->
+      <div class="form-group mb-3">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" max="10">
+      </div>
+
+      <!-- Add to Cart Button -->
+      <form method="POST" action="{% url 'add_to_cart' product.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">Add to Cart</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

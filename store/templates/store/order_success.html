@@ -1,0 +1,11 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+  <div class="container mt-5 text-center">
+    <div class="alert alert-success" role="alert">
+      <h2 class="display-4">Your order has been placed successfully!</h2>
+      <p class="lead">Thank you for your purchase. You will receive an email confirmation soon.</p>
+      <a href="{% url 'home' %}" class="btn btn-primary btn-lg mt-3">Go to Home</a>
+    </div>
+  </div>
+{% endblock %}

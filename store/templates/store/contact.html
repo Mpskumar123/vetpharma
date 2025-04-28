@@ -1,0 +1,316 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+  /* Animations and responsive enhancements */
+  .fade-in {
+    opacity: 0;
+    animation: fadeIn 1s ease-in forwards;
+  }
+  
+  .slide-in-left {
+    transform: translateX(-50px);
+    opacity: 0;
+    animation: slideIn 0.8s ease-out forwards;
+  }
+  
+  .slide-in-right {
+    transform: translateX(50px);
+    opacity: 0;
+    animation: slideIn 0.8s ease-out forwards;
+  }
+  
+  .bounce-in {
+    opacity: 0;
+    animation: bounceIn 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards;
+  }
+  
+  .info-card {
+    transition: all 0.3s ease;
+  }
+  
+  .info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .contact-icon {
+    font-size: 1.5rem;
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .contact-list-item:hover .contact-icon {
+    transform: scale(1.2);
+  }
+  
+  .form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    transition: all 0.3s ease;
+  }
+  
+  .btn-submit {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-submit:hover {
+    transform: translateY(-2px);
+  }
+  
+  .btn-submit:active {
+    transform: translateY(1px);
+  }
+  
+  .btn-submit::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+  }
+  
+  .btn-submit:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideIn {
+    from { 
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+  }
+  
+  @keyframes ripple {
+    0% {
+      transform: scale(0, 0);
+      opacity: 0.5;
+    }
+    20% { transform: scale(25, 25); opacity: 0.3; }
+    100% { opacity: 0; transform: scale(40, 40); }
+  }
+  
+  /* Enhanced responsiveness */
+  @media (max-width: 768px) {
+    .card {
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.8rem;
+    }
+    
+    .page-subtitle {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .card-header h4 {
+      font-size: 1.2rem;
+    }
+    
+    .page-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4 text-secondary page-title fade-in">Contact Us</h2>
+  <p class="text-center text-muted mb-5 page-subtitle fade-in">We would love to hear from you! Please reach out to us with any questions or concerns.</p>
+  
+  <!-- Contact Information Section -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow-sm border-light info-card slide-in-left">
+        <div class="card-header bg-info text-dark">
+          <h4 class="card-title mb-0">Our Contact Information</h4>
+        </div>
+        <div class="card-body">
+          <ul class="list-group">
+            <li class="list-group-item contact-list-item d-flex align-items-center">
+              <i class="fas fa-envelope contact-icon text-info"></i>
+              <div><strong>Email:</strong> <a href="mailto:contact@vetpharma.com" class="text-decoration-none text-info">contact@vetpharma.com</a></div>
+            </li>
+            <li class="list-group-item contact-list-item d-flex align-items-center">
+              <i class="fas fa-phone-alt contact-icon text-info"></i>
+              <div><strong>Phone:</strong> 9618190621</div>
+            </li>
+            <li class="list-group-item contact-list-item d-flex align-items-center">
+              <i class="fas fa-map-marker-alt contact-icon text-info"></i>
+              <div><strong>Address:</strong> Anantapur Andhra Pradesh</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Section -->
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card shadow-lg border-light slide-in-right">
+        <div class="card-header bg-success text-white">
+          <h4 class="card-title mb-0">Get in Touch</h4>
+        </div>
+        <div class="card-body">
+          <form method="POST" id="contactForm">
+            {% csrf_token %}
+            
+            <!-- Name Field -->
+            <div class="form-group mb-3">
+              <label for="name" class="text-secondary">Your Name</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input type="text" class="form-control" id="name" name="name" required placeholder="Enter your full name">
+              </div>
+            </div>
+            
+            <!-- Email Field -->
+            <div class="form-group mb-3">
+              <label for="email" class="text-secondary">Your Email</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email address">
+              </div>
+            </div>
+            
+            <!-- Message Field -->
+            <div class="form-group mb-3">
+              <label for="message" class="text-secondary">Your Message</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-comment"></i></span>
+                <textarea class="form-control" id="message" name="message" rows="4" required placeholder="Write your message here..."></textarea>
+              </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-lg w-100 mt-4 btn-submit bounce-in">
+              Submit <i class="fas fa-paper-plane ms-2"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Apply animations with delay for better visual effect
+    const fadeElements = document.querySelectorAll('.fade-in');
+    fadeElements.forEach((el, index) => {
+      el.style.animationDelay = `${index * 0.2}s`;
+    });
+    
+    const slideLeftElements = document.querySelectorAll('.slide-in-left');
+    slideLeftElements.forEach((el, index) => {
+      el.style.animationDelay = `${0.3 + index * 0.2}s`;
+    });
+    
+    const slideRightElements = document.querySelectorAll('.slide-in-right');
+    slideRightElements.forEach((el, index) => {
+      el.style.animationDelay = `${0.5 + index * 0.2}s`;
+    });
+    
+    const bounceElements = document.querySelectorAll('.bounce-in');
+    bounceElements.forEach((el, index) => {
+      el.style.animationDelay = `${0.8 + index * 0.2}s`;
+    });
+    
+    // Form validation with visual feedback
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+      contactForm.addEventListener('submit', function(event) {
+        const formControls = this.querySelectorAll('.form-control');
+        let isValid = true;
+        
+        formControls.forEach(input => {
+          if (!input.value.trim()) {
+            isValid = false;
+            input.classList.add('is-invalid');
+            
+            // Add shake animation for invalid inputs
+            input.style.animation = 'none';
+            setTimeout(() => {
+              input.style.animation = 'shake 0.5s';
+            }, 10);
+          } else {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+          }
+        });
+        
+        if (!isValid) {
+          event.preventDefault();
+        }
+      });
+      
+      // Add keyup validation for real-time feedback
+      contactForm.querySelectorAll('.form-control').forEach(input => {
+        input.addEventListener('keyup', function() {
+          if (this.value.trim()) {
+            this.classList.remove('is-invalid');
+          }
+        });
+      });
+    }
+  });
+  
+  // Add this shake animation for invalid inputs
+  document.head.insertAdjacentHTML('beforeend', `
+    <style>
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+      }
+      
+      .is-invalid {
+        border-color: #dc3545 !important;
+      }
+      
+      .is-valid {
+        border-color: #28a745 !important;
+      }
+    </style>
+  `);
+</script>
+{% endblock %}

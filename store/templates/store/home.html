@@ -1,0 +1,489 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  /* Animation Keyframes */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(3deg); }
+  }
+  
+  /* Base Styles */
+  :root {
+    --primary: #3f88c5;
+    --secondary: #f7941d;
+    --accent: #6cc24a;
+    --light: #f8f9fb;
+    --dark: #343a40;
+    --white: #ffffff;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    background: linear-gradient(135deg, var(--light) 0%, #e6f2ff 100%);
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* Animated Elements */
+  .fade-in-up {
+    animation: fadeInUp 1s ease forwards;
+  }
+  
+  .fade-in-left {
+    animation: fadeInLeft 1s ease forwards;
+  }
+  
+  .fade-in-right {
+    animation: fadeInRight 1s ease forwards;
+  }
+  
+  .pulse-button {
+    animation: pulse 2s infinite;
+    background-color: var(--accent);
+    border: none;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(108, 194, 74, 0.4);
+    transition: all 0.3s ease;
+  }
+  
+  .pulse-button:hover {
+    background-color: #5ba83f;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(108, 194, 74, 0.6);
+  }
+  
+  .pet-image {
+    max-width: 90%;
+    animation: float 4s ease-in-out infinite;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Floating Elements */
+  .floating-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  .floating-element {
+    position: absolute;
+    opacity: 0.2;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .floating-element.paw {
+    background: url("{% static 'images/icons/paw.svg' %}") no-repeat;
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+  }
+  
+  .floating-element.bone {
+    background: url("{% static 'images/icons/bone.svg' %}") no-repeat;
+    width: 50px;
+    height: 30px;
+    background-size: contain;
+    animation-delay: 1s;
+  }
+  
+  .floating-element.fish {
+    background: url("{% static 'images/icons/fish.svg' %}") no-repeat;
+    width: 45px;
+    height: 25px;
+    background-size: contain;
+    animation-delay: 2s;
+  }
+  
+  .floating-element.heart {
+    background: url("{% static 'images/icons/heart.svg' %}") no-repeat;
+    width: 35px;
+    height: 35px;
+    background-size: contain;
+    animation-delay: 3s;
+  }
+  
+  /* Category Cards */
+  .category-card {
+    background-color: var(--white);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    height: 100%;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .category-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 15px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  /* Feature Cards */
+  .feature-card {
+    padding: 30px 25px;
+    border-radius: 15px;
+    background-color: var(--white);
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+  }
+  
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background-color: var(--accent);
+    transition: all 0.3s ease;
+  }
+  
+  .feature-card:hover::before {
+    height: 10px;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  /* Testimonial Section */
+  .testimonial-section {
+    background-color: #f8f9fb;
+    padding: 80px 0;
+  }
+  
+  .testimonial-card {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .quote-icon {
+    font-size: 3rem;
+    color: rgba(63, 136, 197, 0.1);
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: Georgia, serif;
+  }
+  
+  .pet-owner-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--accent);
+  }
+  
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, var(--primary) 0%, #2d68a3 100%);
+    padding: 80px 0;
+    color: var(--white);
+  }
+  
+  .cta-btn {
+    background-color: var(--secondary);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(247, 148, 29, 0.4);
+  }
+  
+  .cta-btn:hover {
+    background-color: #e68213;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(247, 148, 29, 0.6);
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 991px) {
+    .hero-section {
+      min-height: auto;
+      padding: 100px 0 60px;
+    }
+    
+    .pet-image {
+      margin-top: 40px;
+      max-width: 70%;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .hero-section h1 {
+      font-size: 2.5rem;
+    }
+    
+    .feature-card, .category-card, .testimonial-card {
+      margin-bottom: 20px;
+    }
+    
+    .floating-element {
+      font-size: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 575px) {
+    .hero-section {
+      text-align: center;
+      padding: 80px 0 40px;
+    }
+    
+    .hero-section h1 {
+      font-size: 2rem;
+    }
+    
+    .pet-image {
+      max-width: 80%;
+    }
+  }
+  
+  /* Animation Delays for Scroll Reveal */
+  .delay-1 { animation-delay: 0.2s; }
+  .delay-2 { animation-delay: 0.4s; }
+  .delay-3 { animation-delay: 0.6s; }
+  .delay-4 { animation-delay: 0.8s; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section position-relative">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 fade-in-left">
+        <h1 class="display-4 fw-bold mb-4" style="color: var(--primary);">Welcome to <span style="color: var(--accent);">Vet Pharma</span></h1>
+        <p class="lead mb-4" style="color: var(--dark);">Order pet medicines and food online — easy, fast, and delivered to your doorstep.</p>
+        <p class="mb-5">Browse our wide range of products for your furry friends!</p>
+        <a href="{% url 'product_list' %}" class="btn pulse-button btn-lg px-4 py-3">Shop Now</a>
+      </div>
+      <div class="col-lg-6 text-center fade-in-right">
+        <img src="{% static 'images/happy-pets.png' %}" alt="Happy Pets" class="pet-image" onerror="this.src='https://placehold.co/600x400?text=Happy+Pets'">
+      </div>
+    </div>
+  </div>
+  
+  <!-- Floating Elements -->
+  <div class="floating-elements">
+    <div class="floating-element paw" style="top: 15%; left: 10%;"></div>
+    <div class="floating-element bone" style="top: 30%; right: 15%;"></div>
+    <div class="floating-element fish" style="bottom: 20%; left: 15%;"></div>
+    <div class="floating-element heart" style="bottom: 30%; right: 10%;"></div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-5 fw-bold fade-in-up" style="color: var(--primary);">Popular Categories</h2>
+    <div class="row g-4">
+      <div class="col-6 col-md-3 fade-in-up delay-1">
+        <div class="category-card text-center p-4">
+          <div class="category-icon" style="background-image: url('{% static 'images/icons/dog.svg' %}');"></div>
+          <h5>Dog Care</h5>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 fade-in-up delay-2">
+        <div class="category-card text-center p-4">
+          <div class="category-icon" style="background-image: url('{% static 'images/icons/cat.svg' %}');"></div>
+          <h5>Cat Care</h5>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 fade-in-up delay-3">
+        <div class="category-card text-center p-4">
+          <div class="category-icon" style="background-image: url('{% static 'images/icons/medicine.svg' %}');"></div>
+          <h5>Medications</h5>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 fade-in-up delay-4">
+        <div class="category-card text-center p-4">
+          <div class="category-icon" style="background-image: url('{% static 'images/icons/food.svg' %}');"></div>
+          <h5>Pet Food</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5 fw-bold fade-in-up" style="color: var(--primary);">Why Choose VetPharma?</h2>
+    <div class="row g-4">
+      <div class="col-md-4 fade-in-up delay-1">
+        <div class="feature-card text-center">
+          <div class="feature-icon" style="background-image: url('{% static 'images/icons/delivery.svg' %}');"></div>
+          <h4>Fast Delivery</h4>
+          <p class="text-muted">Get your pet's medications delivered straight to your door within 24-48 hours.</p>
+        </div>
+      </div>
+      <div class="col-md-4 fade-in-up delay-2">
+        <div class="feature-card text-center">
+          <div class="feature-icon" style="background-image: url('{% static 'images/icons/vet.svg' %}');"></div>
+          <h4>Vet Approved</h4>
+          <p class="text-muted">All our products are certified and approved by veterinary professionals.</p>
+        </div>
+      </div>
+      <div class="col-md-4 fade-in-up delay-3">
+        <div class="feature-card text-center">
+          <div class="feature-icon" style="background-image: url('{% static 'images/icons/savings.svg' %}');"></div>
+          <h4>Best Prices</h4>
+          <p class="text-muted">Competitive pricing and regular discounts to help you save on pet care.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonial-section">
+  <div class="container">
+    <h2 class="text-center mb-5 fw-bold fade-in-up" style="color: var(--primary);">What Pet Parents Say</h2>
+    <div class="row g-4">
+      <div class="col-md-6 fade-in-up delay-1">
+        <div class="testimonial-card">
+          <div class="quote-icon">❝</div>
+          <p class="text-muted mb-4">"VetPharma has been a lifesaver for my senior dog's medication needs. The auto-delivery ensures I never run out!"</p>
+          <div class="d-flex align-items-center">
+            <img src="{% static 'images/testimonial1.jpg' %}" alt="Pet Owner" class="pet-owner-image me-3" onerror="this.src='https://placehold.co/60x60?text=J'">
+            <div>
+              <h6 class="mb-0">Jessica M.</h6>
+              <small class="text-muted">Dog Mom to Max</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 fade-in-up delay-2">
+        <div class="testimonial-card">
+          <div class="quote-icon">❝</div>
+          <p class="text-muted mb-4">"The specialty diet food for my cat with allergies was hard to find until I discovered VetPharma. Great service and prices!"</p>
+          <div class="d-flex align-items-center">
+            <img src="{% static 'images/testimonial2.jpg' %}" alt="Pet Owner" class="pet-owner-image me-3" onerror="this.src='https://placehold.co/60x60?text=R'">
+            <div>
+              <h6 class="mb-0">Robert K.</h6>
+              <small class="text-muted">Cat Dad to Whiskers</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container text-center">
+    <h2 class="mb-4 fw-bold fade-in-up">Ready to care for your pet the easy way?</h2>
+    <p class="lead mb-5 fade-in-up delay-1">Join thousands of happy pet parents who trust VetPharma for their pet care needs.</p>
+    <a href="{% url 'product_list' %}" class="btn cta-btn btn-lg px-5 py-3 fade-in-up delay-2">Start Shopping</a>
+  </div>
+</section>
+
+{% block extra_js %}
+<script>
+  // Animation on scroll
+  document.addEventListener('DOMContentLoaded', function() {
+    const animatedElements = document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right');
+    
+    // Initial state - hide all animated elements
+    animatedElements.forEach(element => {
+      element.style.opacity = '0';
+    });
+    
+    // Function to check if element is in viewport
+    function isInViewport(element) {
+      const rect = element.getBoundingClientRect();
+      return (
+        rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.bottom >= 0
+      );
+    }
+    
+    // Function to handle scroll animations
+    function handleScrollAnimations() {
+      animatedElements.forEach(element => {
+        if (isInViewport(element) && element.style.opacity === '0') {
+          // Re-add the animation class to trigger animation
+          const animationClass = Array.from(element.classList).find(cls => cls.startsWith('fade-in'));
+          if (animationClass) {
+            element.style.opacity = '1';
+          }
+        }
+      });
+    }
+    
+    // Run once on load
+    setTimeout(handleScrollAnimations, 300);
+    
+    // Run on scroll
+    window.addEventListener('scroll', handleScrollAnimations);
+  });
+</script>
+{% endblock %}
+{% endblock %}
